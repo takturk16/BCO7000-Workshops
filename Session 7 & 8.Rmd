@@ -10,3 +10,38 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+```{r}
+
+#Assessement 1 C
+
+#Q19
+#Explained mutate then cut number (variable name) then, n=3, then similar process to case when
+
+#Q20
+#ggplot in this case, discrete variable, include facets, coordinates and themes
+
+#Q21 second variable
+#mutate, transfat / total fat x 100 
+
+#Q22
+#similar to Q20 however calories type will be discrete, trans  fat is continuos so different geom I need to apply
+
+#Q23
+#grouping then summarise 
+
+#Q24
+#compare restaurants on total fat so discrete and continous. Which geom will I use? Simple one no need for facets etc. 
+
+```
+
+```{r}
+
+#Assessment 2
+
+#Homework - have a look at it and we will cover Thursday
+
+```
+
+
+
+

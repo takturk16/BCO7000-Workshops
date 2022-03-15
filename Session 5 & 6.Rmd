@@ -232,5 +232,5 @@ skim(survey)
 survey%>%ggplot( 
   aes(industry, annual_salary )) +
 geom_boxplot() 
-  
+
 ```
