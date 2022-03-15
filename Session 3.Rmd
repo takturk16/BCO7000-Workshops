@@ -1,0 +1,64 @@
+---
+title: "Week 2: Workshop 3 & 4 - RMarkdown & Data Wrangling"
+author: "Tolga Akturk"
+output: html_document
+date: '2022-03-01'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+
+### Data Wrangling
+
+```{r}
+survey<-read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-05-18/survey.csv")
+
+country<-survey%>%
+  distinct(country)
+
+survey%>%
+  count(country, sort=TRUE)
+
+survey_short<-survey%>%
+  filter(
+    country=="United States" |
+      country=="USA" |
+      country=="US" |
+      country=="U.S." |
+      country=="Usa" |
+      country=="United States of America"
+    )
+
+survey_short%>%
+  filter(
+    annual_salary>50000 &
+      gender=="Woman"
+  )
+
+survey_short%>%
+  select(how_old_are_you, industry, annual_salary, gender)%>%
+  filter(gender=="Woman")%>%
+  count(industry, sort=TRUE)
+
+knitr::kable(head(mtcars[, 1:4]), "simple")
+
+``` 
+
+
+
+```{r}
+
+#data loading
+
+data<-read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-05-18/survey.csv")
+
+data%>%head()
+
+
+
+```
+

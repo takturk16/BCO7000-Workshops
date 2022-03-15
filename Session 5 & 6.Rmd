@@ -1,0 +1,236 @@
+---
+title: "Session 5"
+author: "Tolga Akturk"
+date: '2022-03-08'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Continuing on from session 4 
+
+### Data Wrangling
+
+```{r}
+
+survey<-read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-05-18/survey.csv")
+
+country<-survey%>%
+  distinct(country)
+
+survey%>%
+  count(country, sort=TRUE)
+
+survey_short<-survey%>%
+  filter(
+    country=="United States" |
+      country=="USA" |
+      country=="US" |
+      country=="U.S." |
+      country=="Usa" |
+      country=="United States of America"
+    )
+
+survey_short%>%
+  filter(
+    annual_salary>50000 &
+      gender=="Woman"
+  )
+
+survey_short%>%
+  select(how_old_are_you, industry, annual_salary, gender)%>%
+  filter(gender=="Woman")%>%
+  count(industry, sort=TRUE)
+
+knitr::kable(head(mtcars[, 1:4]), "pipe")
+
+``` 
+
+## Session 5 starts here
+
+Arranging observations
+
+```{r}
+
+survey_short%>%arrange(desc(annual_salary))%>%
+  select(industry, annual_salary)
+
+survey_short%>%count(industry, sort=TRUE)
+
+```
+
+
+Groupings and New Variables 
+
+```{r}
+
+survey_short%>%
+  mutate(total_salary=annual_salary+other_monetary_comp)%>%
+  select(industry, total_salary, annual_salary, other_monetary_comp)
+
+survey_short%>%
+  mutate(average_salary=mean(annual_salary, na.rm=TRUE))%>%
+  select(industry, average_salary)
+
+survey_short%>%
+  group_by(industry)%>%
+  mutate(average_salary=mean(annual_salary, na.rm=TRUE))%>%
+  select(industry, average_salary)
+
+survey_short%>%
+  group_by(industry, gender)%>%
+  mutate(mean_salary=mean(annual_salary, na.rm=TRUE))%>%
+  select(industry, gender, mean_salary)%>%
+  arrange(desc(mean_salary))%>%
+  ungroup()
+
+
+
+#Add a new variable max_salary which is maximum salary per industry
+  
+```
+
+
+Summarising Data
+
+```{r}
+
+survey_short%>%
+  group_by(industry)%>%
+  summarise(average_salary=mean(annual_salary, na.rm=TRUE))
+
+#Group by industry and gender. Use summarise for average_salary
+#Group by gender and industry. Use summarise for average_salary
+#Group by industry and gender. Use summarise for average_salary and max_salary
+
+survey_short%>%
+  group_by(industry, gender)%>%
+  summarise(average_salary=mean(annual_salary, na.rm=TRUE))
+
+survey_short%>%
+  group_by(gender, industry)%>%
+  summarise(average_salary=mean(annual_salary, na.rm=TRUE))
+
+survey_short%>%
+  group_by(industry, gender)%>%
+  summarise(
+    average_salary=mean(annual_salary, na.rm=TRUE),
+    max_salary=max(annual_salary, na.rm=TRUE))
+
+
+```
+
+Case_when
+
+```{r}
+
+survery_short_veryshort<-survey_short%>%
+  select(industry, gender, annual_salary)
+
+#if annual_salary is more than 700000 then your annual_salary is high otherwise it is low
+
+survery_short_veryshort%>%
+  mutate(
+   annual_salary_level=case_when(
+     annual_salary>700000 ~"high",
+     T~"low"
+   )
+  )%>%
+  arrange(desc(annual_salary))
+
+#if annual_salary is more than 700000 then your annual_salary is high and if your annual_salary is more  than 70000 then your annual_salary is middle otherwise it is low
+
+survery_short_veryshort%>%
+  mutate(
+   annual_salary_level=case_when(
+     annual_salary>700000 ~ "high",
+     annual_salary>70000 & annual_salary<=700000 ~ "middle",
+     T~"low"
+   )
+  )
+
+#create a variable highly_paid_women
+#if gender=="woman" and annual_salary>50000 then (~) it is "high", otherwise it is low
+
+survery_short_veryshort%>%
+  mutate(
+   highly_paid_women=case_when(
+     gender=="Woman" & annual_salary>50000 ~ "high",
+     T~"low"
+   )
+  )
+
+```
+
+
+## Session 5 cont. plus Session 6
+
+Notes: 
+
+Must have! 
+1. Data is data
+2. Aesthethics is variables e.g. x and y axis
+3. Geometries are charts e.g. bar, histogram
+
+Optional
+4. Facets are seperate graphs and how you position them together
+5. Statistics e.g. mean, etc
+6. Coordinates e.g. legend, label on coordinates
+7. Theme e.g. colour, 
+
+x axis first in code then y
+
+
+```{r}
+
+#Experimenting with Aesthetics
+data(mpg)
+mpg%>%ggplot( 
+  aes(displ, hwy, colour = class, size = cyl, shape = trans)) +
+geom_point() 
+
+#one continutous, one discrete
+data(mpg)
+mpg%>%ggplot( 
+  aes(manufacturer, cty, colour = class)) +
+geom_point() 
+
+#two continuous
+
+data(mpg)
+mpg%>%ggplot( 
+  aes(hwy, cty)) +
+geom_smooth() 
+
+``` 
+
+```{r}
+
+data(mpg)
+mpg%>%ggplot( 
+  aes(displ, hwy, colour = class)) +
+geom_point() 
+
+```
+
+
+```{r}
+#Step 11 assignment part 2
+#install.packages("skimr")
+library(skimr)
+
+skim(survey)
+
+#generate as many as possible beautiful and meaningful data viz using survey datasheet
+
+```
+
+```{r}
+
+survey%>%ggplot( 
+  aes(industry, annual_salary )) +
+geom_boxplot() 
+  
+```
